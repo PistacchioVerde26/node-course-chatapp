@@ -13,11 +13,23 @@ const port = process.env.PORT || 3000
 app.use(express.static(publicPath));
 
 io.on('connection', (socket) => {
+
     console.log('New user connected');
+
+    socket.emit('newMessage', {
+        from: 'Sender',
+        text: 'Message text',
+        createdAt: 1234
+    });
+
+    socket.on('createMessage', (message) => {
+        console.log(message);
+    })
 
     socket.on('disconnect', () => {
         console.log('Lost connection with client');
     })
+
 });
 
 
