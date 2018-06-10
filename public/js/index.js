@@ -14,15 +14,16 @@ socket.on('disconnect', function () {
 // })
 
 socket.on('newMessage', function (message) {
-    console.log(message);
+    var formattedTime = moment(message.createdAt).format('H:mm:ss');
     var li = $('<li></li>');
-    li.text(message.from + ": " + message.text);
+    li.text(formattedTime + " | " + message.from + ": " + message.text);
     $('#messages').append(li);
 });
 
 socket.on('newLocationMessage', function (message) {
+    var formattedTime = moment(message.createdAt).format('H:mm:ss');
     var li = $('<li></li>');
-    li.text(message.from + ' is from: ');
+    li.text(formattedTime + " | " + message.from + " is from: ");
     var a = $('<a target="_blank" ></a>');
     a.text('Click for position');
     a.attr('href', message.url);
@@ -42,6 +43,7 @@ $('#message-form').on('submit', function (e) {
     }, function () {
         messageTextbox.val('');
     });
+    messageTextbox.focus();
 });
 
 var locationButton = $('#send-location');
@@ -51,7 +53,7 @@ locationButton.on('click', function () {
     }
 
     locationButton.attr('disabled', 'disabled').text('Sending location...');
-
+    messageTextbox.focus();
     navigator.geolocation.getCurrentPosition(function (position) {
         socket.emit('createLocationMessage', {
             latitude: position.coords.latitude,
