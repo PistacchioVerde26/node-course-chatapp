@@ -8,28 +8,26 @@ socket.on('disconnect', function () {
     console.log('Disconnected from server');
 });
 
-// socket.emit('createMessage', {
-//     from: 'Sender',
-//     text: 'New message from client'
-// })
-
 socket.on('newMessage', function (message) {
-    var formattedTime = moment(message.createdAt).format('H:mm:ss');
-    var li = $('<li></li>');
-    li.text(formattedTime + " | " + message.from + ": " + message.text);
-    $('#messages').append(li);
+    var template = $('#message-template').html();
+    var html = Mustache.render(template, {
+        text: message.text,
+        from: message.from,
+        time: moment(message.createdAt).format('H:mm:ss')
+    });
+
+    $('#messages').append(html);
 });
 
 socket.on('newLocationMessage', function (message) {
-    var formattedTime = moment(message.createdAt).format('H:mm:ss');
-    var li = $('<li></li>');
-    li.text(formattedTime + " | " + message.from + " is from: ");
-    var a = $('<a target="_blank" ></a>');
-    a.text('Click for position');
-    a.attr('href', message.url);
-    li.append(a);
+    var template = $('#location-message-template').html();
+    var html = Mustache.render(template, {
+        from: message.from,
+        url: message.url,
+        time: moment(message.createdAt).format('H:mm:ss')
+    });
 
-    $('#messages').append(li);
+    $('#messages').append(html);
 })
 
 var messageTextbox = $('[name=message]');
