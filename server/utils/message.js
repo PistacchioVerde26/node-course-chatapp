@@ -14,4 +14,4 @@ var generateLocationMessage = (from, coords) => {
     }
 }
 
-module.exports = {generateMessage, generateLocationMessage}
+module.exports = { generateMessage, generateLocationMessage }
